@@ -372,7 +372,7 @@ room('c6','فصل ٦',6.5,4.5,BX1,12.9,'cls',[['w',1.4]],{maxw:5.6});
 room('wc_br','دورة مياه',8.25,19,BX1,BZ1,'svc',[['n',1.6,11]],{sub:'دورة مياه الطلاب'});
 room('st_br','درج داخلي',5.5,22,8.25,BZ1,'svc',[['n',2]],{sub:'إلى السطح'});
 stairs(5.8,22.4,8.0,26.9,'s');
-room('guide','المرشد الطلابي',-0.4,21.75,5.5,BZ1,'stu',[['n',1.5]],{maxw:5.6});
+room('guide','الموجه الطلابي',-0.4,21.75,5.5,BZ1,'stu',[['n',1.5]],{maxw:5.6});
 room('sec','السكرتارية',-6.5,21.75,-0.4,BZ1,'admin',[['n',1.5]],{maxw:5.6});
 room('vice','الوكيل',-12.5,21.75,-6.5,BZ1,'admin',[['n',1.5]],{maxw:5.6});
 room('c1','فصل ١',BX0,-6.5,-18,1.5,'cls',[['e',1.4]],{maxw:6.4});
@@ -447,7 +447,7 @@ const WZ=[-9,-.15,8.8,17.65,BZ1],EZ=[-9.2,-.4,8.5,17.3];
 for(let i=0;i<4;i++)U('u_w'+(i+1),'فصل طلابي',BX0,WZ[i],WXi,WZ[i+1],'cls',[['e',1.6,WZ[i]+1.9]],{sub:'الجناح الغربي '+AR(i+1),maxw:6});
 for(let i=0;i<3;i++)U('u_e'+(i+1),'فصل طلابي',EXi,EZ[i],BX1,EZ[i+1],'cls',[['w',1.6,EZ[i]+1.9]],{sub:'الجناح الشرقي '+AR(i+1),maxw:6});
 U('u_wc_br','دورة مياه',EXi,17.3,BX1,BZ1,'svc',[['w',1.4,19.5]],{sub:'دورة مياه الطلاب'});
-U('u_adm','موجه طلابي',WXi,BZi,-11.3,BZ1,'admin',[['n',1.8,-15.8]],{sub:'غرفة إدارية',maxw:5.6});
+U('u_adm','الإداريين والموجه الطلابي',WXi,BZi,-11.3,BZ1,'admin',[['n',1.8,-15.8]],{maxw:5.6});
 U('u_diff','غرفة صعوبات التعلم',-11.3,BZi,-4.7,BZ1,'edu',[['n',1.8,-9.5]],{maxw:5.6});
 U('u_teach','غرفة المعلمين',-4.7,BZi,2.5,BZ1,'admin',[['n',1.8,-2.9]],{maxw:6});
 U('u_st_br','درج داخلي',2.5,BZi,EXi,BZ1,'svc',[],{open:'n',sub:'إلى السطح',maxw:3.4});
@@ -503,6 +503,8 @@ wallSeg(x0,z0,x0,z1,{...wo,doors:side==='w'?[[dpos,1.3]]:[]});wallSeg(x1,z0,x1,z
 box(x1-x0+.4,.3,z1-z0+.4,(x0+x1)/2,RY+hh,(z0+z1)/2,mat.roof,g);
 floorLabel(nm,(x0+x1)/2,(z0+z1)/2,3.2,RY+hh+.35,CAT.svc.c,g,'سطح المبنى');};
 stairHead(2.5,21.75,EXi,BZ1,'w',25.8,'غرفة السطح');
+stairHead(EXi,21.75,10.7,BZ1,'n',8.6,'مستودع');
+textPlane('مستودع',1.8,.6,8.6,RY+hh-.9,BZ1+.17,0,'#f4f1e6','#1c2f4d',g);
 box(1.1,2.15,.07,2.8,T-.3,25.3,mat.green,g,false);
 textPlane('مدرسة المحمدية الابتدائية',3.7,1.05,4.5,RY+hh-1.05,BZ1+.17,0,'#f4f1e6','#1c2f4d',g);
 { const tz=RY+hh+.3;[3.5,5.5].forEach(x=>{box(1.3,.5,2.2,x,tz,24.5,mat.steel,g);const t=new THREE.Mesh(new THREE.CylinderGeometry(.58,.58,2,18),M(0xf2f2f2,.4));t.rotation.x=Math.PI/2;t.position.set(x,tz+1.1,24.5);t.castShadow=true;g.add(t);});}
@@ -517,7 +519,8 @@ box(8,.55,4,-9.5,0,15.4,mat.turf,g);box(8.1,.12,4.1,-9.5,0,15.4,mat.mono,g,false
 box(6.4,3.3,.08,-9.5,.55,17,mat.white,g,false);box(.08,2.4,.08,-12.4,.55,16.9,mat.steel,g,false);box(.08,2.4,.08,-6.6,.55,16.9,mat.steel,g,false);
 box(.9,1.5,.5,-4.9,0,15.8,mat.deskL,g);textPlane('منبر الإذاعة',.85,.4,-4.9,1.15,15.53,0,'#eef3ee','#1f6a4a',g);
 box(.9,.5,.5,-9.5,.55,15,mat.mono,g,false);
-[[-13.2,-6,0],[1.95,-6,Math.PI],[1.95,14.5,Math.PI],[-13.2,10,0]].forEach(([x,z,r])=>{const a=new THREE.Group();const b=new THREE.Mesh(new THREE.BoxGeometry(.8,1.9,.5),M(0xd5d7d8,.5));b.position.y=.95;a.add(b);const v=new THREE.Mesh(new THREE.BoxGeometry(.6,.9,.04),mat.mono);v.position.set(0,.8,.27);a.add(v);a.position.set(x,0,z);a.rotation.y=r;a.children.forEach(m=>m.castShadow=true);g.add(a);});
+floorLabel('المسرح',-9.5,15.4,5.2,.6,CAT.edu.c,G.lab0,'منصة الإذاعة');floorLabel('المسرح',-9.5,15.4,5.2,.6,CAT.edu.c,G.lab1,'منصة الإذاعة');
+[[-13.2,-6,Math.PI/2],[1.95,-6,-Math.PI/2],[1.95,14.5,-Math.PI/2],[-13.2,10,Math.PI/2]].forEach(([x,z,r])=>{const a=new THREE.Group();const b=new THREE.Mesh(new THREE.BoxGeometry(.8,1.9,.5),M(0xd5d7d8,.5));b.position.y=.95;a.add(b);const v=new THREE.Mesh(new THREE.BoxGeometry(.6,.9,.04),mat.mono);v.position.set(0,.8,.27);a.add(v);a.position.set(x,0,z);a.rotation.y=r;a.children.forEach(m=>m.castShadow=true);g.add(a);});
 bench(-17.4,-1.5,Math.PI/2);bench(-17.4,10,Math.PI/2);bench(6.0,0,Math.PI/2);bench(6.0,11,Math.PI/2);
 const BN=[['#1b2f6a','نحن قادرون على التعلم'],['#0f6b4f','التعلم رحلة ممتعة'],['#7a2d6b','مدرسة آمنة وجاذبة'],['#8a5a14','العلم نور'],['#b0302a','نحب مدرستنا'],['#0e6a82','معاً نتعلم']];
 let q=0;const bn=()=>BN[(q++)%BN.length];
@@ -603,7 +606,7 @@ const stops=[
 {name:'المسرح',sub:'أمام غرفة الوكيل',pos:[-9.5,12.5],cam:[-9.5,2.8,4],look:[-9.5,1.4,17]},
 {name:'دورة مياه',sub:'الزاوية السفلية اليمنى',pos:[11,23],room:'wc_br'},
 {name:'درج داخلي',pos:[6.9,24.6],room:'st_br'},
-{name:'المرشد الطلابي',pos:[2.5,24.5],room:'guide'},
+{name:'الموجه الطلابي',pos:[2.5,24.5],room:'guide'},
 {name:'السكرتارية',pos:[-3.5,24.5],room:'sec'},
 {name:'الوكيل',pos:[-9.5,24.5],room:'vice'},
 {name:'مدخل المبنى الرئيسي',sub:'بين الوكيل وغرفة المدير',pos:[-15.25,26.3],cam:[-15.25,4.2,41],look:[-15.25,1.6,16]},
@@ -627,7 +630,7 @@ const stops=[
 ,{up:1,name:'درج داخلي',sub:'الزاوية السفلية اليمنى',pos:[4.5,24.6],room:'u_st_br'}
 ,{up:1,name:'غرفة المعلمين',pos:[-1.2,24.5],room:'u_teach'}
 ,{up:1,name:'غرفة صعوبات التعلم',pos:[-8,24.5],room:'u_diff'}
-,{up:1,name:'موجه طلابي',sub:'غرفة إدارية',pos:[-14.6,24.5],room:'u_adm'}
+,{up:1,name:'الإداريين والموجه الطلابي',pos:[-14.6,24.5],room:'u_adm'}
 ,{up:1,name:'فصل طلابي',sub:'الجناح الغربي ٤',pos:[-22,22.4],room:'u_w4'}
 ,{up:1,name:'فصل طلابي',sub:'الجناح الغربي ٣',pos:[-22,13.2],room:'u_w3'}
 ,{up:1,name:'فصل طلابي',sub:'الجناح الغربي ٢',pos:[-22,4.3],room:'u_w2'}
