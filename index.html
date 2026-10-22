@@ -347,7 +347,7 @@ box(.5,2.7,.5,cx-w/2,0,37,mat.white,G.ground);box(.5,2.7,.5,cx+w/2,0,37,mat.whit
 gate(-14.75,5);gate(17,10);
 box(.35,2.3,6.8,5.25,0,33.6,mat.wall,G.ground);
 let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
-function tree(x,z,s=1){
+function tree(x,z,s=1){return;
 const tr=new THREE.Mesh(new THREE.CylinderGeometry(.14*s,.26*s,2.2*s,8),mat.trunk);tr.position.set(x,1.1*s,z);tr.castShadow=true;G.ground.add(tr);
 const L=[mat.leaf,mat.leafB,mat.leafC][Math.floor(rnd()*3)];
 for(let i=0;i<5;i++){const r=(.75+rnd()*.5)*s;const m=new THREE.Mesh(new THREE.IcosahedronGeometry(r,1),i%2?L:mat.leafB);m.position.set(x+(rnd()-.5)*1.3*s,(2.7+rnd()*1.3)*s,z+(rnd()-.5)*1.3*s);m.castShadow=true;G.ground.add(m);}
