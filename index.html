@@ -44,6 +44,7 @@ button{font-family:inherit;cursor:pointer}
 #legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-inline-end:5px;vertical-align:-1px}
 #stage{position:relative;min-width:0;min-height:0}
 #c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#vig{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(ellipse at center,transparent 55%,rgba(20,14,6,.38) 100%)}
 #hud{position:absolute;inset-inline:12px;top:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 #now{pointer-events:auto;background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:800;font-size:15px;box-shadow:0 4px 18px #0002}
 #now small{display:block;font-weight:500;color:var(--muted);font-size:12px}
@@ -106,7 +107,7 @@ scene.environment=pm.fromScene(es).texture;}
 const camera=new THREE.PerspectiveCamera(52,1,.1,700);
 const controls=new THREE.OrbitControls(camera,cv);
 controls.enableDamping=true;controls.dampingFactor=.08;controls.maxPolarAngle=Math.PI/2-.02;controls.minDistance=.6;controls.maxDistance=230;
-scene.add(new THREE.HemisphereLight(0xfff8ec,0xb59a6c,.38));
+const hemi=new THREE.HemisphereLight(0xfff8ec,0xb59a6c,.38);scene.add(hemi);
 const sun=new THREE.DirectionalLight(0xffe9c4,.8);sun.position.set(-70,110,60);sun.castShadow=true;
 sun.shadow.mapSize.set(4096,4096);const sc=sun.shadow.camera;sc.left=-75;sc.right=75;sc.top=75;sc.bottom=-75;sc.near=10;sc.far=330;sun.shadow.bias=-.0003;sun.shadow.normalBias=.04;
 scene.add(sun);
@@ -664,6 +665,8 @@ const stops=[
 ,{roof:1,mode:'full',name:'السقف الزجاجي',sub:'مغطى بالزجاج بشكل الكوخ',pos:[-5.6,4.2],cam:[-34,Y1+26,34],look:[-5.6,Y1+7,4]}
 ,{roof:1,mode:'full',name:'غرفة السطح',sub:'ملاصقة لواجهة المبنى',pos:[4.5,24.5],cam:[4.5,Y1+16,50],look:[4.5,Y1+6,25]}
 ];
+{const old=stops.slice();const gOrder=[26,11,12,10,9,8,7,6,24,23,22,21,20,19,16,15,14,13,5,4,3,2,1,0,25,17,18,27];
+stops.splice(0,old.length,...gOrder.map(i=>old[i]),...old.slice(28));}
 stops[0].sec='الدور الأرضي والمحيط';
 stops.forEach(s=>{if(s.up)s.mode='upper';if(s.room){const r=rooms[s.room],yy=s.up?Y1:0;s.cam=[r.cx,yy+17,r.cz+8];s.look=[r.cx,yy+.2,r.cz-.2];}});
 function mkRoute(arr,y,gR,gB,close){ const pts=arr.map(s=>new THREE.Vector3(s.pos[0],y+.25,s.pos[1]));
@@ -696,6 +699,11 @@ const modesEl=document.getElementById('modes');
 const b=document.createElement('button');b.className='btn';b.dataset.m=k;b.textContent=t;b.onclick=()=>{setMode(k);};modesEl.appendChild(b);});
 const toggles={labels:{on:true},route:{on:true},outer:{on:true},safety:{on:true}};
 const togEl=document.getElementById('toggles');
+{const vg=document.createElement('div');vg.id='vig';stage.appendChild(vg);
+const setPhoto=on=>{sun.color.set(on?0xffddb0:0xffe9c4);sun.intensity=on?.95:.8;if(on)sun.position.set(-95,72,85);else sun.position.set(-70,110,60);
+hemi.intensity=on?.34:.38;cv.style.filter=on?'contrast(1.06) saturate(.94)':'';vg.style.opacity=on?1:0;};
+const b=document.createElement('button');b.className='btn';b.textContent='📷 تصوير واقعي';let on=false;
+b.onclick=()=>{on=!on;b.classList.toggle('on',on);setPhoto(on);};togEl.appendChild(b);on=true;b.classList.add('on');setPhoto(true);}
 [['labels','الأسماء'],['route','مسار الجولة'],['outer','أسماء الخارج'],['safety','الإخلاء والسلامة']].forEach(([k,t])=>{
 const b=document.createElement('button');b.className='btn on';b.textContent=t;
 b.onclick=()=>{toggles[k].on=!toggles[k].on;b.classList.toggle('on',toggles[k].on);if(k==='outer')G.labOut.visible=toggles[k].on;setMode(mode);};togEl.appendChild(b);});
