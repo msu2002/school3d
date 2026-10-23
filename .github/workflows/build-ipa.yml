@@ -70,4 +70,4 @@ jobs:
         with:
           tag_name: ios-${{ github.run_number }}
           name: تطبيق آيفون وآيباد ${{ github.run_number }}
-          files: app/School3D.ipa
+          files: School3D.ipa
