@@ -34,6 +34,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 .kingdom{font-size:11px;opacity:.85;font-weight:600}
 .ministry{font-size:12px;font-weight:700;opacity:.95}
 h1{font-family:"Amiri","Cairo",serif;font-size:22px;margin:2px 0;font-weight:700;letter-spacing:.2px}
+.ttl{display:flex;align-items:center;justify-content:center;gap:9px}.me{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);flex:none;background:#fff}.by{font-size:11px;color:#f3dfa6;font-weight:600;margin-top:1px}
 .gov{font-size:12.5px;color:#f3dfa6;font-weight:700}
 .gov:empty{display:none}
 .sub{font-size:11.5px;opacity:.88;margin:7px 0 0;text-align:center}
@@ -70,7 +71,7 @@ button{font-family:inherit;cursor:pointer}
 #side header{padding:8px 12px 8px;border-bottom-width:2px}
 .kingdom,.sub,#legend,#foot{display:none}
 .logo{width:40px;height:40px}
-h1{font-size:18px;margin:0}
+h1{font-size:18px;margin:0}.me{width:32px;height:32px}.by{font-size:10px}
 .ministry{font-size:11px}
 .bar{padding:0 12px 8px;gap:5px}
 .btn{padding:6px 10px;font-size:12.5px}
@@ -87,7 +88,7 @@ h1{font-size:18px;margin:0}
 .kingdom,.ministry,.sub,#legend,#foot{display:none}
 #side header{padding:6px 10px}
 .logo{width:34px;height:34px}
-h1{font-size:16px}
+h1{font-size:16px}.me{width:28px;height:28px}.by{display:none}
 #nav .btn{padding:6px 11px;font-size:12px}
 }
 </style>
@@ -98,7 +99,7 @@ h1{font-size:16px}
 <header>
 <div class="brand">
 <div class="logo"><img src="assets/moe.png" alt="وزارة التعليم" onerror="this.parentNode.remove()"></div>
-<div class="t"><div class="kingdom">المملكة العربية السعودية</div><div class="ministry">وزارة التعليم</div><h1>مدرسة المحمدية الابتدائية</h1><div class="gov" id="gov"></div></div>
+<div class="t"><div class="kingdom">المملكة العربية السعودية</div><div class="ministry">وزارة التعليم</div><div class="ttl"><h1>مدرسة المحمدية الابتدائية</h1><img class="me" alt="" src="data:image/jpeg;base64,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"></div><div class="gov" id="gov"></div><div class="by">قام بعمل هذا التصميم فهد عبدالله الجروان</div></div>
 <div class="logo"><img src="assets/vision2030.png" alt="رؤية المملكة 2030" onerror="this.parentNode.remove()"></div>
 </div>
 <p class="sub">مجسّم ثلاثي الأبعاد · اضغط أي محطة للانتقال إليها</p>
