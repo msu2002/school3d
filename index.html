@@ -688,7 +688,7 @@ const g=new THREE.BufferGeometry().setFromPoints(curve.getPoints(800));
 const line=new THREE.Line(g,new THREE.LineDashedMaterial({color:0x2a6fd6,dashSize:.8,gapSize:.5}));
 line.computeLineDistances();line.renderOrder=5;line.material.depthTest=false;gR.add(line);
 arr.forEach(s=>{const i=stops.indexOf(s);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:badgeTex(i+1),depthTest:false,transparent:true,sizeAttenuation:false}));
-sp.scale.set(.042,.042,1);sp.position.set(s.pos[0],y+2.2,s.pos[1]);sp.renderOrder=20;s.sprite=sp;gB.add(sp);});}
+sp.scale.set(.042,.042,1);sp.position.set(s.pos[0],y+2.2,s.pos[1]);sp.renderOrder=20;sp.visible=false;s.sprite=sp;gB.add(sp);});}
 mkRoute(stops.filter(s=>!s.up&&!s.roof),0,G.route,G.badge,true);
 mkRoute(stops.filter(s=>s.up),Y1,G.route1,G.badge1,false);
 let mode='ground';
