@@ -443,8 +443,6 @@ wallSeg(BX1,12.9,BX1,19,{doors:[[15.95,3.2]]});
 floorLabel('الساحة الداخلية للطلاب',-5,5,11,.08,CAT.move.c,G.lab0,'فاضية تماماً');
 floorLabel('مدخل المبنى الرئيسي',-15.25,24.2,5,.09,'#e5483f',G.lab0);
 floorLabel('مدخل الطلاب والفناء الخارجي',10.2,16,7.5,.09,'#14a388',G.lab0);
-windowsRow('z',BX0,-17,26,1.5,4,-1);windowsRow('x',BZ0,-24,12,1.5,4,-1);
-windowsRow('z',BX1,-17,11,1.5,4,1);windowsRow('x',BZ1,-12,6,1.5,4,1);
 NOR=false;
 function classroom(id,g=G.f0){const r=rooms[id];
 for(let i=0;i<2;i++)for(let j=0;j<2;j++){
@@ -509,8 +507,21 @@ U('u_adm','الإداريين والموجه الطلابي',WXi,BZi,-11.3,BZ1,'
 U('u_diff','غرفة صعوبات التعلم',-11.3,BZi,-4.7,BZ1,'edu',[['n',1.8,-9.5]],{maxw:5.6});
 U('u_teach','غرفة المعلمين',-4.7,BZi,2.5,BZ1,'admin',[['n',1.8,-2.9]],{maxw:6});
 U('u_st_br','درج داخلي',2.5,BZi,EXi,BZ1,'svc',[],{open:'n',sub:'إلى السطح',maxw:3.4});
-windowsRow('z',BX0,-17,26,Y1+1.5,4,-1,G.f1);windowsRow('x',BZ0,-24,12,Y1+1.5,4,-1,G.f1);
-windowsRow('z',BX1,-17,11,Y1+1.5,4,1,G.f1);windowsRow('x',BZ1,-12,6,Y1+1.5,4,1,G.f1);
+function vwin(axis,c,p,y,sg,g){const w=.75,h=1.6,t=.12;
+const bx=(W,H,D,X,Y,Z,m)=>axis==='x'?box(W,H,D,X,Y,Z,m,g,false):box(D,H,W,Z,Y,X,m,g,false);
+const at=c+sg*.14,at2=c+sg*.2;
+bx(w,h,t,p,y,at,mat.glass);
+bx(w+.2,.08,.2,p,y+h,at,mat.green);bx(w+.3,.07,.3,p,y-.1,at2,mat.white);
+bx(.05,h,.05,p,y,at2,mat.white);bx(.05,h,.05,p-w/2,y,at2,mat.white);bx(.05,h,.05,p+w/2,y,at2,mat.white);
+bx(w,.04,.05,p,y+h*.55,at2,mat.white);}
+Object.values(rooms).forEach(r=>{
+const f1=r.y>0,g=f1?G.f1:G.f0,y=r.y+.95;
+const put=(axis,c,a,b,sg)=>{const L=b-a;[1/3,2/3].forEach(k=>vwin(axis,c,a+L*k,y,sg,g));};
+if(r.x0===BX0)put('z',BX0,r.z0,r.z1,-1);
+if(r.x1===BX1)put('z',BX1,r.z0,r.z1,1);
+if(r.z0===BZ0)put('x',BZ0,r.x0,r.x1,-1);
+if(r.z1===BZ1&&!(r.y===0&&r.x1===BX1&&r.x0>8))put('x',BZ1,r.x0,r.x1,1);
+});
 floorLabel('فراغ مكشوف على الدور الأرضي',(VX0+VX1)/2,(VZ0+VZ1)/2,11,.12,'#e5483f',G.lab1,'الساحة الداخلية بالأسفل');
 floorLabel('ممر الدور الأول',(VX0+VX1)/2,TZi+1.6,6,Y1+.1,CAT.move.c,G.lab1);
 { YO=Y1;
