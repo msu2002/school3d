@@ -1,0 +1,73 @@
+name: Build iOS IPA (unsigned)
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  apk:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - name: Prepare project
+        run: |
+          mkdir app && cd app
+          npm init -y >/dev/null
+          npm i three@0.128.0 @fontsource/cairo @fontsource/amiri @capacitor/core @capacitor/cli @capacitor/ios @capacitor/assets
+          python3 -m pip install --break-system-packages pillow
+          python3 - <<'PY'
+          import re,shutil,os
+          os.makedirs('www/lib',exist_ok=True);os.makedirs('www/fonts',exist_ok=True);os.makedirs('resources',exist_ok=True)
+          shutil.copy('node_modules/three/build/three.min.js','www/lib/three.min.js')
+          shutil.copy('node_modules/three/examples/js/controls/OrbitControls.js','www/lib/OrbitControls.js')
+          AR='U+0600-06FF,U+200C-200E,U+2010-2011,U+204F,U+2E41,U+FB50-FDFF,U+FE80-FEFC'
+          LA='U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD'
+          css=''
+          for fam,fol,ws in (('Cairo','cairo',(500,700,800)),('Amiri','amiri',(700,))):
+              for w in ws:
+                  for sub,rng in (('arabic',AR),('latin',LA)):
+                      fn=f'{fol}-{sub}-{w}-normal.woff2'
+                      shutil.copy(f'node_modules/@fontsource/{fol}/files/'+fn,'www/fonts/'+fn)
+                      css+=f"@font-face{{font-family:'{fam}';font-weight:{w};font-style:normal;font-display:swap;src:url(fonts/{fn}) format('woff2');unicode-range:{rng}}}\n"
+          open('www/fonts.css','w').write(css)
+          s=open('../index.html').read()
+          s=re.sub(r'<link rel="preconnect"[^\n]*\n<link href="https://fonts.googleapis[^\n]*\n','<link rel="stylesheet" href="fonts.css">\n',s,count=1)
+          s=re.sub(r'<script src="https://cdnjs[^\n]*\n<script src="https://cdn.jsdelivr[^\n]*\n','<script src="lib/three.min.js"></script>\n<script src="lib/OrbitControls.js"></script>\n',s,count=1)
+          assert 'cdnjs' not in s and 'googleapis' not in s
+          open('www/index.html','w').write(s)
+          from PIL import Image,ImageDraw
+          S=1024;im=Image.new('RGB',(S,S));d=ImageDraw.Draw(im)
+          for y in range(S):d.line([(0,y),(S,y)],fill=(15-int(8*y/S),107-int(40*y/S),78-int(25*y/S)))
+          d.polygon([(512,230),(820,400),(512,570),(204,400)],fill=(245,236,214))
+          d.polygon([(204,400),(512,570),(512,790),(204,620)],fill=(226,214,184))
+          d.polygon([(820,400),(512,570),(512,790),(820,620)],fill=(205,190,155))
+          d.polygon([(512,300),(700,400),(512,500),(324,400)],fill=(15,107,78))
+          for i in range(3):
+              x=250+i*80;d.polygon([(x,500+i*40),(x+46,526+i*40),(x+46,590+i*40),(x,564+i*40)],fill=(10,70,52))
+              x2=560+i*80;d.polygon([(x2,562-i*40),(x2+46,536-i*40),(x2+46,600-i*40),(x2,626-i*40)],fill=(10,70,52))
+          d.rectangle([0,860,S,880],fill=(213,172,70))
+          im.save('resources/icon-only.png');im.save('resources/icon-foreground.png')
+          Image.new('RGB',(S,S),'#0f6b4e').save('resources/icon-background.png')
+          sp=Image.new('RGB',(2732,2732),'#0c4a38');sp.paste(im.resize((820,820)),(956,836));sp.save('resources/splash.png');sp.save('resources/splash-dark.png')
+          PY
+          cat > capacitor.config.json <<'JSON'
+          {"appId":"sa.school.mohammadiya3d","appName":"المدرسة المحمدية","webDir":"www","backgroundColor":"#0c4a38","ios":{"backgroundColor":"#0c4a38"}}
+          JSON
+          npx cap add ios
+          npx capacitor-assets generate --ios --iconBackgroundColor '#0f6b4e' --splashBackgroundColor '#0c4a38'
+          npx cap sync ios
+      - name: Build IPA
+        run: |
+          cd app/ios/App
+          xcodebuild -project App.xcodeproj -scheme App -sdk iphoneos -configuration Release -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
+          mkdir Payload
+          cp -R build/Build/Products/Release-iphoneos/App.app Payload/
+          zip -qry ../../../School3D.ipa Payload
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ios-${{ github.run_number }}
+          name: تطبيق آيفون وآيباد ${{ github.run_number }}
+          files: app/School3D.ipa
