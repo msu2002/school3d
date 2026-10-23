@@ -324,6 +324,11 @@ a?box(.34,.34,.24,x,.3+lv*.62,z+p,m,g,false):box(.24,.34,.34,x+p,.3+lv*.62,z,m,g
 }
 const PXm=px=>-25.75+(px-625)/8.86, PZm=py=>-18.75+(py-690)/12.61;
 function pr(x0,y0,x1,y1){const X0=PXm(x0),X1=PXm(x1),Z0=PZm(y0),Z1=PZm(y1);return{X0,X1,Z0,Z1,cx:(X0+X1)/2,cz:(Z0+Z1)/2,w:X1-X0,d:Z1-Z0};}
+function hip(w,d,h,x,y,z,col,g){const a=w/2,b=d/2,B=[[-a,0,-b],[a,0,-b],[a,0,b],[-a,0,b]];let R,F;
+if(w>=d){const r=(w-d)/2;R=[[-r,h,0],[r,h,0]];F=[[B[0],B[1],R[1]],[B[0],R[1],R[0]],[B[1],B[2],R[1]],[B[2],B[3],R[0]],[B[2],R[0],R[1]],[B[3],B[0],R[0]]];}
+else{const r=(d-w)/2;R=[[0,h,-r],[0,h,r]];F=[[B[0],B[1],R[0]],[B[1],B[2],R[1]],[B[1],R[1],R[0]],[B[2],B[3],R[1]],[B[3],B[0],R[0]],[B[3],R[0],R[1]]];}
+const pos=[];F.forEach(t=>t.forEach(v=>pos.push(v[0],v[1],v[2])));const ge=new THREE.BufferGeometry();ge.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));ge.computeVertexNormals();
+const m=new THREE.Mesh(ge,M(col,.8,{flatShading:true,side:THREE.DoubleSide}));m.position.set(x,y,z);m.castShadow=true;g.add(m);}
 function prPlane(x0,y0,x1,y1,y,m,g){const r=pr(x0,y0,x1,y1);plane(r.w,r.d,r.cx,y,r.cz,m,g);return r;}
 plane(700,700,0,-.02,0,mat.sand);
 {const r=pr(558,290,1155,1418);plane(r.w,r.d,r.cx,0,r.cz,tiled('#b8a995','#9d8f7b',r.w,r.d,2.4));}
@@ -575,18 +580,19 @@ evac([[4.5,-11.1],[-15.9,-11.1]],Y1+.1,h);evac([[-15.9,19.9],[-15.9,-11.1]],Y1+.
 YO=0; }
 { const zb=[-2.6,9.4,21.3,27.1],x0=14.8,x1=33.2,w=x1-x0,cx=(x0+x1)/2;
 for(let i=0;i<3;i++){const d=zb[i+1]-zb[i]-.25,cz=(zb[i]+zb[i+1])/2;
-const m=new THREE.Mesh(new THREE.ConeGeometry(1,1.7,4),i%2?mat.tent2:mat.tent);m.rotation.y=Math.PI/4;m.scale.set(w/1.414,1,d/1.414);m.position.set(cx,3.5+.85,cz);m.castShadow=true;G.ground.add(m);
+if(i<2){const m=new THREE.Mesh(new THREE.ConeGeometry(1,1.7,4),i%2?mat.tent2:mat.tent);m.rotation.y=Math.PI/4;m.scale.set(w/1.414,1,d/1.414);m.position.set(cx,3.5+.85,cz);m.castShadow=true;G.ground.add(m);}else box(w,.25,d,cx,3.4,cz,mat.slab,G.ground);
 [[x0+.3,zb[i]+.4],[x1-.3,zb[i]+.4],[x0+.3,zb[i+1]-.4],[x1-.3,zb[i+1]-.4]].forEach(([px,pz])=>cyl(.1,3.6,px,0,pz,mat.cream,G.ground,8));
 box(w,.22,.14,cx,3.3,zb[i]+.4,mat.cream,G.ground,false);box(w,.22,.14,cx,3.3,zb[i+1]-.4,mat.cream,G.ground,false);box(.14,.22,d,x0+.3,3.3,cz,mat.cream,G.ground,false);box(.14,.22,d,x1-.3,3.3,cz,mat.cream,G.ground,false);}
 floorLabel('الساحة الخارجية للطلاب',cx,12,8.5,5.55,CAT.move.c,G.labOut,'الساحة الشرقية');
 }
 [[130,105,270,205,1],[320,255,395,395,1],[0,285,110,405],[140,270,225,400],[255,435,385,565],[120,410,215,570],[135,595,262,760],[318,590,412,640],[350,640,410,715,1],[0,905,130,1235],[60,925,175,1000],[710,205,830,255],[835,185,915,240],[1455,545,1600,800],[1560,1215,1622,1300]].forEach(([a,b,c,d,red],k)=>{const r=pr(a,b,c,d),h=3.6+(k%3)*.5;
 box(r.w,h,r.d,r.cx,0,r.cz,mat.wallIn,G.ground);
-if(red){const m=new THREE.Mesh(new THREE.ConeGeometry(1,2,4),M(0xa9372f,.8,{flatShading:true}));m.rotation.y=Math.PI/4;m.scale.set(r.w/1.414,1,r.d/1.414);m.position.set(r.cx,h+1,r.cz);m.castShadow=true;G.ground.add(m);}
+if(red){hip(r.w+.8,r.d+.8,2.3,r.cx,h,r.cz,0xa9372f,G.ground);}
 else box(r.w+.4,.3,r.d+.4,r.cx,h,r.cz,M(0xd8ccb2,.9),G.ground);});
 room('guard','الحارس',-12.25,31.5,-4.5,37,'svc',[['w',1.4]],{sub:'غرفة الحارس',maxw:6});
 desk(-8.5,35.3,0);
 room('canteen','المقصف',22.5,31.5,28.75,37,'stu',[['n',1.6]],{maxw:5.4});
+room('extra','غرفة',28.75,31.5,33.4,37,'svc',[['n',1.4]],{maxw:4.2});
 box(.5,1,4.4,rooms.canteen.x0+.6,0,rooms.canteen.cz,mat.wood,G.f0,false);box(.5,1.9,5,rooms.canteen.x1-.5,0,rooms.canteen.cz,mat.wood,G.f0,false);
 {const HR=pr(895,300,1135,670),x0=HR.X0,x1=HR.X1,z0=HR.Z0,z1=HR.Z1,h=8,cx=(x0+x1)/2,cz=(z0+z1)/2;
 plane(x1-x0,z1-z0,cx,.04,cz,M(0xcf9f61,.55));
@@ -672,6 +678,7 @@ const stops=[
 ];
 {const old=stops.slice();const gOrder=[26,11,12,10,9,8,7,6,24,23,22,21,20,19,16,15,14,13,5,4,3,2,1,0,25,17,18,27];
 stops.splice(0,old.length,...gOrder.map(i=>old[i]),...old.slice(28));}
+{const k=stops.findIndex(s=>s.name==='المقصف');stops.splice(k+1,0,{name:'غرفة',sub:'ملاصقة للمقصف',pos:[31,34.2],room:'extra'});}
 stops[0].sec='الدور الأرضي والمحيط';
 stops.forEach(s=>{if(s.up)s.mode='upper';if(s.room){const r=rooms[s.room],yy=s.up?Y1:0;s.cam=[r.cx,yy+17,r.cz+8];s.look=[r.cx,yy+.2,r.cz-.2];}});
 function mkRoute(arr,y,gR,gB,close){ const pts=arr.map(s=>new THREE.Vector3(s.pos[0],y+.25,s.pos[1]));
