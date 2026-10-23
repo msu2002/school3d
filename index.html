@@ -723,7 +723,7 @@ b.onclick=()=>{toggles[k].on=!toggles[k].on;b.classList.toggle('on',toggles[k].o
 const b=document.createElement('button');b.className='btn';b.textContent=t;b.onclick=()=>{curIdx=-1;markCur();fly(k==='top'?{cam:[0,118,-4],look:[0,0,-6]}:{cam:[-8,84,120],look:[0,0,-8]},'المنظر '+(k==='top'?'العلوي':'الجوي'),'اسحب للتدوير');};togEl.appendChild(b);});
 const listEl=document.getElementById('list');
 stops.forEach((s,i)=>{if(s.sec)listEl.insertAdjacentHTML('beforeend','<div class="sec">'+s.sec+'</div>');const b=document.createElement('button');b.className='stop';
-b.innerHTML=`<span class="n">${AR(i+1)}</span><span>${s.name}${s.verify?'<span class="tag">للتأكيد</span>':''}${s.sub?`<small>${s.sub}</small>`:''}</span>`;
+b.innerHTML=`<span>${s.name}${s.verify?'<span class="tag">للتأكيد</span>':''}${s.sub?`<small>${s.sub}</small>`:''}</span>`;
 b.onclick=()=>{stopTour();go(i);};listEl.appendChild(b);s.btn=b;});
 let fl=null;
 function fly(t,title,sub,dur=1800){
@@ -736,7 +736,7 @@ function go(i){
 i=(i+stops.length)%stops.length;curIdx=i;const s=stops[i];
 if(s.mode)setMode(s.mode);else if(mode==='upper'||mode==='full')setMode('ground');
 markCur();s.btn.scrollIntoView({block:'nearest',behavior:'smooth'});
-fly(s,`${AR(i+1)}. ${s.name}`,s.sub||'');
+fly(s,s.name,s.sub||'');
 }
 document.getElementById('prev').onclick=()=>{stopTour();go(curIdx<0?0:curIdx-1);};
 document.getElementById('next').onclick=()=>{stopTour();go(curIdx+1);};
