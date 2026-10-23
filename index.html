@@ -427,7 +427,7 @@ room('train','غرفة التدريب',3.25,BZ0,BX1,-11,'edu',[['s',1.7,4.8]]);
 room('c4','فصل ٤',6.5,-11,BX1,-3.5,'cls',[['w',1.4]],{maxw:5.6});
 room('c5','فصل ٥',6.5,-3.5,BX1,4.5,'cls',[['w',1.4]],{maxw:5.6});
 room('c6','فصل ٦',6.5,4.5,BX1,12.9,'cls',[['w',1.4]],{maxw:5.6});
-room('wc_br','دورة مياه',8.25,19,BX1,BZ1,'svc',[['n',1.6,11]],{sub:'دورة مياه الطلاب'});
+room('wc_br','دورة مياه',8.25,19,BX1,BZ1,'svc',[['n',1.6,11],['s',1.5,12.5]],{sub:'دورة مياه الطلاب'});
 room('st_br','درج داخلي',5.5,22,8.25,BZ1,'svc',[['n',2]],{sub:'إلى السطح'});
 stairs(5.8,22.4,8.0,26.9,'s');
 room('guide','الموجه الطلابي',-0.4,21.75,5.5,BZ1,'stu',[['n',1.5]],{maxw:5.6});
@@ -593,6 +593,9 @@ const ln=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vect
 { const g=G.ground;
 for(let i=0;i<3;i++){box(4.4,.42-.14*i,.42,-15.25,0,BZ1+.2+i*.4+.2,mat.granite,g);}
 for(let i=0;i<3;i++){box(.42,.42-.14*i,4.2,BX1+.2+i*.4+.2,0,15.95,mat.granite,g);}
+for(let i=0;i<3;i++){box(1.9,.42-.14*i,.42,12.5,0,BZ1+.2+i*.4+.2,mat.granite,g);}
+box(1.0,.32,.06,12.5,2.55,BZ1+.16,new THREE.MeshLambertMaterial({color:0x14a354}),g,false);
+floorLabel('مخرج طوارئ',12.5,BZ1+2.3,3.2,.09,'#14a354',G.lab0);
 const peak=(cx,cz,w,d,eave,rise,skip=[])=>{
 const m=new THREE.Mesh(new THREE.ConeGeometry(1,rise,4),mat.tent);m.rotation.y=Math.PI/4;m.scale.set(w/1.414,1,d/1.414);m.position.set(cx,eave+rise/2,cz);m.castShadow=true;g.add(m);
 const x0=cx-w/2,x1=cx+w/2,z0=cz-d/2,z1=cz+d/2;
