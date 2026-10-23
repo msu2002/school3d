@@ -3,31 +3,41 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مجسم المدرسة ثلاثي الأبعاد</title>
+<title>مدرسة المحمدية الابتدائية — مجسم ثلاثي الأبعاد</title>
+<meta name="theme-color" content="#0c4a38">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=Cairo:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
---bg:#f4f1ea; --panel:#ffffff; --ink:#1d2b2f; --muted:#5d6b70; --line:#e2ddd0;
---accent:#e4572e; --accent-ink:#fff; --chip:#efeadd;
+--bg:#f3f5f3; --panel:#ffffff; --ink:#1d2b2f; --muted:#5d6b70; --line:#dbe3de;
+--accent:#0f6b4e; --accent-ink:#fff; --chip:#eaf0ec; --gold:#b38a2e;
 }
 @media (prefers-color-scheme: dark){
 :root:not([data-theme="light"]){
 --bg:#12181a; --panel:#1b2427; --ink:#eef2f1; --muted:#9db0b5; --line:#2c393d;
---accent:#ff7a4d; --accent-ink:#1a0d07; --chip:#25323640;
+--accent:#46c08f; --accent-ink:#04130d; --chip:#25323640;
 }
 }
 :root[data-theme="dark"]{
 --bg:#12181a; --panel:#1b2427; --ink:#eef2f1; --muted:#9db0b5; --line:#2c393d;
---accent:#ff7a4d; --accent-ink:#1a0d07; --chip:#253236;
+--accent:#46c08f; --accent-ink:#04130d; --chip:#253236;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Cairo",system-ui,sans-serif}
 #app{display:grid;grid-template-columns:340px 1fr;height:100vh;height:100dvh}
 #side{background:var(--panel);border-inline-end:1px solid var(--line);display:flex;flex-direction:column;min-height:0;z-index:5}
-#side header{padding:16px 16px 10px}
-h1{font-size:19px;margin:0 0 2px;font-weight:800}
-.sub{font-size:12.5px;color:var(--muted);margin:0}
+#side header{padding:14px 14px 12px;background:linear-gradient(180deg,#0f5a43,#0b4635);color:#fff;border-bottom:3px solid var(--gold)}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{flex:none;width:56px;height:56px;display:grid;place-items:center}
+.logo img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:9px;padding:3px}
+.brand .t{flex:1;text-align:center;line-height:1.35;min-width:0}
+.kingdom{font-size:11px;opacity:.85;font-weight:600}
+.ministry{font-size:12px;font-weight:700;opacity:.95}
+h1{font-family:"Amiri","Cairo",serif;font-size:22px;margin:2px 0;font-weight:700;letter-spacing:.2px}
+.gov{font-size:12.5px;color:#f3dfa6;font-weight:700}
+.gov:empty{display:none}
+.sub{font-size:11.5px;opacity:.88;margin:7px 0 0;text-align:center}
+#foot{padding:8px 14px 10px;font-size:11px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
 .bar{padding:0 16px 10px;display:flex;flex-wrap:wrap;gap:6px}
 button{font-family:inherit;cursor:pointer}
 .btn{border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:7px 11px;border-radius:9px;font-size:13px;font-weight:600}
@@ -52,13 +62,33 @@ button{font-family:inherit;cursor:pointer}
 #nav .btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 #nav .btn{pointer-events:auto;background:var(--panel);box-shadow:0 4px 14px #0003;font-size:14px;padding:9px 16px}
 #loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);z-index:9;font-weight:700}
+@media (max-width:1100px){#app{grid-template-columns:300px 1fr}.logo{width:48px;height:48px}h1{font-size:20px}}
 @media (max-width:820px){
-#app{grid-template-columns:1fr;grid-template-rows:1fr 42%}
+#app{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) 46%}
 #side{order:2;border-inline-end:0;border-top:1px solid var(--line)}
 #stage{order:1}
-header{padding:10px 14px 6px!important}
-.sub{display:none}
-#legend{display:none}
+#side header{padding:8px 12px 8px;border-bottom-width:2px}
+.kingdom,.sub,#legend,#foot{display:none}
+.logo{width:40px;height:40px}
+h1{font-size:18px;margin:0}
+.ministry{font-size:11px}
+.bar{padding:0 12px 8px;gap:5px}
+.btn{padding:6px 10px;font-size:12.5px}
+.stop{padding:9px 8px}
+#hud{inset-inline:8px;top:8px}
+#now{font-size:13.5px;padding:6px 11px}
+#nav{bottom:calc(10px + env(safe-area-inset-bottom));gap:6px}
+#nav .btn{padding:8px 13px;font-size:13px}
+}
+@media (max-height:520px) and (orientation:landscape){
+#app{grid-template-columns:270px 1fr;grid-template-rows:none}
+#side{order:0;border-top:0;border-inline-end:1px solid var(--line)}
+#stage{order:0}
+.kingdom,.ministry,.sub,#legend,#foot{display:none}
+#side header{padding:6px 10px}
+.logo{width:34px;height:34px}
+h1{font-size:16px}
+#nav .btn{padding:6px 11px;font-size:12px}
 }
 </style>
 </head>
@@ -66,14 +96,19 @@ header{padding:10px 14px 6px!important}
 <div id="app">
 <aside id="side">
 <header>
-<h1>المدرسة المحمدية — مجسم ثلاثي الأبعاد</h1>
-<p class="sub">مطابق للكروكي · الجولة مع عقارب الساعة · اضغط أي محطة للانتقال إليها</p>
+<div class="brand">
+<div class="logo"><img src="assets/moe.png" alt="وزارة التعليم" onerror="this.parentNode.remove()"></div>
+<div class="t"><div class="kingdom">المملكة العربية السعودية</div><div class="ministry">وزارة التعليم</div><h1>مدرسة المحمدية الابتدائية</h1><div class="gov" id="gov"></div></div>
+<div class="logo"><img src="assets/vision2030.png" alt="رؤية المملكة 2030" onerror="this.parentNode.remove()"></div>
+</div>
+<p class="sub">مجسّم ثلاثي الأبعاد · اضغط أي محطة للانتقال إليها</p>
 </header>
 <div class="bar" id="modes"></div>
 <div class="bar" id="toggles"></div>
 <div class="sec">محطات الجولة</div>
 <div id="list"></div>
 <div id="legend"></div>
+<div id="foot">مجسّم تعريفي ثلاثي الأبعاد لمدرسة المحمدية الابتدائية</div>
 </aside>
 <main id="stage">
 <canvas id="c"></canvas>
