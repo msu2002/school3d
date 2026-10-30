@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>مدرسة المحمدية الابتدائية — مجسم ثلاثي الأبعاد</title>
 <meta name="theme-color" content="#0c4a38">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,6 +56,11 @@ button{font-family:inherit;cursor:pointer}
 #stage{position:relative;min-width:0;min-height:0}
 #c{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 #vig{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(ellipse at center,transparent 55%,rgba(20,14,6,.38) 100%)}
+#emBtn{position:absolute;inset-inline-end:12px;top:78px;z-index:5;width:52px;height:52px;border-radius:14px;border:2px solid #14a354;background:var(--panel);color:#14a354;box-shadow:0 4px 14px #0003;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font:700 9.5px/1 inherit;cursor:pointer;padding:0}
+#emBtn svg{width:26px;height:26px}
+#emBtn.on{background:#14a354;color:#fff}
+#emBtn.off svg{opacity:.55}
+@media(max-width:720px){#emBtn{top:70px;width:46px;height:46px;inset-inline-end:8px}}
 #hud{position:absolute;inset-inline:12px;top:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}
 #now{pointer-events:auto;background:color-mix(in srgb,var(--panel) 90%,transparent);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-weight:800;font-size:15px;box-shadow:0 4px 18px #0002}
 #now small{display:block;font-weight:500;color:var(--muted);font-size:12px}
@@ -113,7 +118,8 @@ h1{font-size:16px}.me{width:28px;height:28px}.by{display:none}
 </aside>
 <main id="stage">
 <canvas id="c"></canvas>
-<div id="hud"><div id="now">المنظر الجوي<small>اسحب للتدوير · عجلة الفأرة أو القرص للتقريب</small></div></div>
+<button id="emBtn" class="on" title="إظهار / إخفاء مسار مخارج الطوارئ" aria-label="إظهار أو إخفاء مسار مخارج الطوارئ" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h5a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-5"/><path d="M3 12h10"/><path d="M9 8l4 4-4 4"/></svg><span>الطوارئ</span></button>
+    <div id="hud"><div id="now">المنظر الجوي<small>اسحب للتدوير · عجلة الفأرة أو القرص للتقريب</small></div></div>
 <div id="nav">
 <button class="btn" id="prev">◀ السابق</button>
 <button class="btn" id="play">▶ جولة تلقائية</button>
@@ -222,7 +228,7 @@ move:{c:'#9aa89f',t:'ممرات وصالات'}
 };
 const legend=document.getElementById('legend');
 Object.values(CAT).forEach(v=>{legend.insertAdjacentHTML('beforeend',`<span><i style="background:${v.c}"></i>${v.t}</span>`)});
-[['#e0322b','مسار الإخلاء / طفاية / إنذار'],['#1f9a5a','مخرج طوارئ'],['#2a6fd6','مسار الجولة']].forEach(([c,t])=>legend.insertAdjacentHTML('beforeend',`<span><i style="background:${c}"></i>${t}</span>`));
+[['#e0322b','طفاية / إنذار'],['#14a354','مخارج ومسارات الطوارئ'],['#0aa5a0','دخول الطلاب'],['#f0a020','خروج الطلاب'],['#2a6fd6','مسار الجولة']].forEach(([c,t])=>legend.insertAdjacentHTML('beforeend',`<span><i style="background:${c}"></i>${t}</span>`));
 function rr(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath();}
 function labelTex(txt,col,sub){
 const W=640,H=sub?190:150;const c=document.createElement('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
@@ -671,13 +677,118 @@ peak(17.2,33.4,9.4,7.6,3.5,3.4);peak(-15.25,29.9,4.6,4.4,3.2,2.2);peak(-15,34.9,
 bell(3.25,-10.85,'z',g);bell(-17.75,20.2,'x',g);bell(6.3,17.6,'x',g);
 hoseBox(-2,21.6,'x',g);hoseBox(-17.7,-9,'z',g);
 exitSign(7.2,20.6,g);exitSign(-13.1,-10.4,g);
-evac([[-16.9,20.2],[5.6,20.2]],.1,g);evac([[5.6,20.2],[5.6,-10.3],[-16.9,-10.3]],.1,g);evac([[-16.9,20.2],[-16.9,-10.3]],.1,g);
 YO=Y1;const h=G.evac1;
 [[-17.65,-6],[-17.65,6],[-17.65,15],[6.25,-6],[6.25,6],[-8,-12.55],[-6,21.55],[0.5,21.55]].forEach(([x,z])=>extinguisher(x,z,h));
 bell(-1.5,-12.6,'z',h);bell(6.3,15,'x',h);hoseBox(-17.7,-2,'z',h);hoseBox(6.3,10,'z',h);
 exitSign(-16.2,-10.6,h);exitSign(4.5,20.8,h);
-evac([[4.5,-11.1],[-15.9,-11.1]],Y1+.1,h);evac([[-15.9,19.9],[-15.9,-11.1]],Y1+.1,h);evac([[4.5,-11.1],[4.5,19.9]],Y1+.1,h);
 YO=0; }
+{ YO=0;
+const FLOW_IN=0x0aa5a0,FLOW_OUT=0xf0a020,EM=0x14a354;
+G.flow=new THREE.Group();G.em0=new THREE.Group();G.em1=new THREE.Group();G.flow1=new THREE.Group();
+[G.flow,G.em0,G.em1,G.flow1].forEach(g=>scene.add(g));
+function lane(pts,y,g,col){const m=new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide});
+for(let i=0;i<pts.length-1;i++){const [x0,z0]=pts[i],[x1,z1]=pts[i+1];const L=Math.hypot(x1-x0,z1-z0),dx=(x1-x0)/L,dz=(z1-z0)/L;
+for(let s=.3;s<L-1.6;s+=1.5){const d=new THREE.Mesh(new THREE.PlaneGeometry(.8,.26),m);flat(d,x0+dx*(s+.4),y,z0+dz*(s+.4),dx,dz);g.add(d);}
+const n=Math.max(1,Math.floor(L/7));
+for(let k=0;k<n;k++){const t=k===n-1?Math.max(.5,L-1.3):(k+.5)/n*L;const a=new THREE.Mesh(arrGeo,m);a.scale.set(1.25,1.25,1);flat(a,x0+dx*t,y+.01,z0+dz*t,dx,dz);g.add(a);}}}
+function signTex(txt,sub,col,run){const c=document.createElement('canvas');c.width=420;c.height=220;const g=c.getContext('2d');
+g.fillStyle=col;rr(g,6,6,408,208,26);g.fill();g.strokeStyle='#fff';g.lineWidth=7;rr(g,14,14,392,192,20);g.stroke();
+if(run){g.fillStyle='#fff';g.strokeStyle='#fff';g.lineWidth=11;g.lineCap='round';
+g.beginPath();g.arc(92,66,15,0,7);g.fill();
+g.beginPath();g.moveTo(88,86);g.lineTo(70,124);g.lineTo(46,132);g.moveTo(88,86);g.lineTo(112,108);g.lineTo(134,100);g.moveTo(74,118);g.lineTo(96,144);g.lineTo(78,178);g.moveTo(80,112);g.lineTo(62,160);g.lineTo(34,168);g.stroke();
+g.beginPath();g.moveTo(150,110);g.lineTo(190,110);g.lineTo(190,92);g.lineTo(222,118);g.lineTo(190,144);g.lineTo(190,126);g.lineTo(150,126);g.closePath();g.fill();}
+g.fillStyle='#fff';g.direction='rtl';g.textAlign='center';
+g.font='800 '+(run?40:52)+'px Cairo, sans-serif';g.fillText(txt,run?300:210,run?92:96);
+g.font='700 '+(run?26:30)+'px Cairo, sans-serif';g.fillText(sub||'',run?300:210,run?140:150);
+const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t;}
+function sign(x,y,z,txt,sub,col,run,g,sc){const s=new THREE.Sprite(new THREE.SpriteMaterial({map:signTex(txt,sub,col,run),transparent:true,depthTest:true}));
+const k=sc||1;s.scale.set(3.4*k,1.8*k,1);s.position.set(x,y,z);g.add(s);
+const pm=mat.steel;const p=new THREE.Mesh(new THREE.BoxGeometry(.08,y-.3,.08),pm);p.position.set(x,(y-.3)/2,z);g.add(p);}
+function zone(x,z,r,txt,y,g,col){const m=new THREE.Mesh(new THREE.CircleGeometry(r,40),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.35,side:THREE.DoubleSide}));
+m.rotation.x=-Math.PI/2;m.position.set(x,y,z);g.add(m);
+const ring=new THREE.Mesh(new THREE.RingGeometry(r-.18,r,40),new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.set(x,y+.01,z);g.add(ring);
+floorLabel(txt,x,z,r*1.7,y+.03,'#0b6b3a',g);}
+const IN_L=-14.4,OUT_L=-16.1,EIN=16.8,EOUT=15.1;
+const ENTER=[
+[[IN_L,41],[IN_L,31],[IN_L,23],[IN_L,13.5],[-17.3,13.5]],
+[[IN_L,41],[IN_L,31],[IN_L,23],[IN_L,5.5],[-17.3,5.5]],
+[[IN_L,41],[IN_L,31],[IN_L,23],[IN_L,-2.5],[-17.3,-2.5]],
+[[IN_L,41],[IN_L,31],[IN_L,23],[IN_L,19.5],[3,19.5],[4.8,8.7],[6.2,8.7]],
+[[28,EIN],[13.75,EIN],[8.5,EIN],[4.8,12],[4.8,.5],[6.2,.5]],
+[[28,EIN],[13.75,EIN],[8.5,EIN],[4.8,12],[4.8,-7.25],[6.2,-7.25]]];
+const LEAVE=[
+[[-17.3,13.5],[OUT_L,13.5],[OUT_L,23],[OUT_L,31],[OUT_L,41]],
+[[-17.3,5.5],[OUT_L,5.5],[OUT_L,23],[OUT_L,31],[OUT_L,41]],
+[[-17.3,-2.5],[OUT_L,-2.5],[OUT_L,23],[OUT_L,31],[OUT_L,41]],
+[[6.2,8.7],[4.8,10],[4.8,EOUT],[13.75,EOUT],[28,EOUT]],
+[[6.2,.5],[4.8,2],[4.8,EOUT],[13.75,EOUT],[28,EOUT]],
+[[6.2,-7.25],[4.8,-6],[4.8,EOUT],[13.75,EOUT],[28,EOUT]]];
+lane([[IN_L,40],[IN_L,24],[IN_L,19.5]],.12,G.flow,FLOW_IN);
+lane([[OUT_L,19.5],[OUT_L,26],[OUT_L,40]],.12,G.flow,FLOW_OUT);
+lane([[26,EIN],[8,EIN]],.12,G.flow,FLOW_IN);
+lane([[8,EOUT],[26,EOUT]],.12,G.flow,FLOW_OUT);
+sign(-11.2,3.5,30,'دخول الطلاب','المدخل الرئيسي','#0a8f8b',false,G.flow,1);
+sign(-19.4,3.5,30,'خروج الطلاب','المدخل الرئيسي','#d98a0b',false,G.flow,1);
+sign(16.2,2.9,19.9,'دخول الطلاب','بوابة الفناء','#0a8f8b',false,G.flow,.9);
+sign(16.2,2.9,11.2,'خروج الطلاب','بوابة الفناء','#d98a0b',false,G.flow,.9);
+const E0=[
+[[-17.3,5.5],[-16.4,5.5],[-16.4,-8],[-16.4,-25]],
+[[-17.3,-2.5],[-16.4,-2.5],[-16.4,-8],[-16.4,-25]],
+[[-8.6,-10.3],[-8.6,-9.2],[-16.4,-9.2],[-16.4,-25]],
+[[-17.3,13.5],[-16.4,13.5],[-16.4,23],[-15.25,26],[-15.25,34]],
+[[2.55,21.2],[2.55,20.5],[-14.4,20.5],[-15.25,23],[-15.25,34]],
+[[6.2,8.7],[4.8,10],[4.8,15.95],[13.75,15.95],[24,15.95]],
+[[6.2,.5],[4.8,2],[4.8,15.95],[13.75,15.95],[24,15.95]],
+[[6.2,-7.25],[4.8,-6],[4.8,15.95],[13.75,15.95],[24,15.95]],
+[[6.9,24.8],[6.9,22.6],[6.9,17],[10,15.95],[24,15.95]],
+[[10.2,21],[12.5,24],[12.5,34]],
+[[-19.6,-9],[-19.6,-17.3],[-19.6,-25],[-17.2,-27]]];
+E0.forEach(p=>lane(p,.16,G.em0,EM));
+sign(-16.5,3.6,-17.3,'مخرج طوارئ ١','باب الملعب الشمالي','#14a354',true,G.em0,1.05);
+sign(-12.2,3.6,26.6,'مخرج طوارئ ٢','المدخل الرئيسي','#14a354',true,G.em0,1.05);
+sign(13.2,3.1,13.2,'مخرج طوارئ ٣','بوابة الفناء الشرقي','#14a354',true,G.em0,1.05);
+sign(9.8,3.6,28.3,'مخرج طوارئ ٤','الجنوب الشرقي','#14a354',true,G.em0,1.0);
+sign(-20.6,3.6,-17.3,'مخرج طوارئ ٥','دورة المياه الشمالية','#14a354',true,G.em0,1.0);
+zone(-16.5,-28,3.2,'نقطة التجمع (أ)',.1,G.em0,EM);
+zone(24,13,3.4,'نقطة التجمع (ب)',.1,G.em0,EM);
+const Y=Y1+.18;
+const E1=[
+[[-15.85,0],[-15.85,-11.1],[-16.2,-11.1],[-16.2,-16.6]],
+[[4.5,-3],[4.5,-11.1],[-15.85,-11.1]],
+[[-15.85,1],[-15.85,19.9],[4.5,19.9],[4.5,25.6]],
+[[4.5,-1.5],[4.5,19.9]]];
+E1.forEach(p=>lane(p,Y,G.em1,EM));
+sign(-12,Y1+3.4,-14.5,'مخرج طوارئ ١','الدرج الشمالي ↓','#14a354',true,G.em1,1.05);
+sign(.4,Y1+3.4,24.5,'مخرج طوارئ ٢','الدرج الجنوبي ↓','#14a354',true,G.em1,1.05);
+floorLabel('الإخلاء: النزول بالدرجين ثم الخروج لنقطة التجمع',-5.6,4.2,10,Y1+.2,'#0b6b3a',G.em1);
+const geo={b:new THREE.CylinderGeometry(.2,.27,1.0,10),h:new THREE.SphereGeometry(.17,10,8),c:new THREE.CylinderGeometry(.19,.19,.09,10),k:new THREE.BoxGeometry(.34,.42,.14)};
+const mt={b:new THREE.MeshStandardMaterial({color:0xf4f1e8,roughness:.8}),h:new THREE.MeshStandardMaterial({color:0xd8a273,roughness:.7}),
+c:[new THREE.MeshStandardMaterial({color:0xffffff}),new THREE.MeshStandardMaterial({color:0xd23a2d})],
+k:[0x2a6fd6,0xe0883a,0x37a35c,0x8b5fc7,0xd9435a].map(c=>new THREE.MeshStandardMaterial({color:c,roughness:.7}))};
+const walkers=[];
+function student(i){const g=new THREE.Group();
+const b=new THREE.Mesh(geo.b,mt.b);b.position.y=.5;const h=new THREE.Mesh(geo.h,mt.h);h.position.y=1.17;
+const c=new THREE.Mesh(geo.c,mt.c[i%2]);c.position.y=1.31;const k=new THREE.Mesh(geo.k,mt.k[i%5]);k.position.set(0,.8,-.2);
+[b,h,c,k].forEach(m=>{m.castShadow=true;g.add(m);});g.scale.setScalar(1.3);return g;}
+function walker(pts,y,g,n,speed){let L=0;const seg=[];for(let i=0;i<pts.length-1;i++){const l=Math.hypot(pts[i+1][0]-pts[i][0],pts[i+1][1]-pts[i][1]);seg.push([L,l]);L+=l;}
+for(let j=0;j<n;j++){const m=student(walkers.length);m.position.y=y;g.add(m);walkers.push({m,pts,seg,L,y,s:j/n*L,v:speed*(.85+((walkers.length*37)%10)/33)});}}
+ENTER.forEach(p=>walker(p,0,G.flow,2,1.5));LEAVE.forEach(p=>walker(p,0,G.flow,2,1.5));
+E0.forEach(p=>walker(p,0,G.em0,1,2.2));
+[E1[0],E1[1],E1[2],E1[3]].forEach(p=>walker(p,Y1,G.em1,2,2.2));
+let last=performance.now();
+window.__animWalkers=function(){const now=performance.now(),dt=Math.min(.1,(now-last)/1000);last=now;
+walkers.forEach(w=>{const par=w.m.parent;if(!par||!par.visible)return;w.s+=w.v*dt;if(w.s>w.L)w.s-=w.L;
+let i=0;while(i<w.seg.length-1&&w.s>w.seg[i][0]+w.seg[i][1])i++;
+const [s0,l]=w.seg[i],a=w.pts[i],b=w.pts[i+1],t=Math.min(1,(w.s-s0)/l);
+const x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;
+w.m.position.set(x,w.y+Math.abs(Math.sin(w.s*5))*.06,z);w.m.rotation.y=Math.atan2(b[0]-a[0],b[1]-a[1]);
+w.m.scale.setScalar(1.3*Math.max(.001,Math.min(1,w.s/1.2,(w.L-w.s)/1.2)));});};
+const quick=[['دخول الطلاب للمبنى','البوابة الرئيسية والفناء الشرقي','ground',{cam:[-6,11,54],look:[-6,1.5,26]},{flow:1}],
+['خروج الطلاب من المبنى','المنظر من الفناء الشرقي','ground',{cam:[34,12,6],look:[10,1,14]},{flow:1}],
+['مخارج الطوارئ — الدور الأرضي','خمسة مخارج ونقطتا تجمع','ground',{cam:[-6,70,52],look:[-6,0,3]},{em:1}],
+['مخارج الطوارئ — الدور الأول','الدرجان الشمالي والجنوبي','upper',{cam:[-6,Y1+62,40],look:[-6,Y1,4]},{em:1}]];
+window.__quickViews=quick;
+}
 { const zb=[-2.6,9.4,21.3,31.4],x0=14.8,x1=33.2,w=x1-x0,cx=(x0+x1)/2;
 for(let i=0;i<3;i++){const d=zb[i+1]-zb[i]-.25,cz=(zb[i]+zb[i+1])/2;
 if(i<2){const m=new THREE.Mesh(new THREE.ConeGeometry(1,1.7,4),i%2?mat.tent2:mat.tent);m.rotation.y=Math.PI/4;m.scale.set(w/1.414,1,d/1.414);m.position.set(cx,3.5+.85,cz);m.castShadow=true;G.ground.add(m);}else{box(w,.14,d,cx,3.5,cz,mat.tent,G.ground);for(let k=1;k<4;k++){const px=x0+.3+(w-.6)*k/4;cyl(.1,3.6,px,0,zb[i]+.4,mat.cream,G.ground,8);cyl(.1,3.6,px,0,zb[i+1]-.4,mat.cream,G.ground,8);box(.14,.2,d,px,3.3,cz,mat.cream,G.ground,false);}}
@@ -832,18 +943,22 @@ G.slab.visible=!ground;
 G.badge.visible=toggles.route.on&&!upper;G.route.visible=toggles.route.on&&!upper;
 G.badge1.visible=toggles.route.on&&upper;G.route1.visible=toggles.route.on&&upper;
 G.evac0.visible=toggles.safety.on;G.evac1.visible=toggles.safety.on&&!ground;
+G.flow.visible=toggles.flow.on&&!upper;G.em0.visible=toggles.em.on&&!upper;G.em1.visible=toggles.em.on&&!ground;
+  const eb=document.getElementById('emBtn');if(eb){eb.classList.toggle('on',toggles.em.on);eb.classList.toggle('off',!toggles.em.on);eb.setAttribute('aria-pressed',toggles.em.on);}
+  document.querySelectorAll('#toggles .btn').forEach(x=>{if(x.textContent==='مخارج الطوارئ')x.classList.toggle('on',toggles.em.on);});
 }
 const modesEl=document.getElementById('modes');
 [['ground','الدور الأرضي'],['upper','الدور الأول'],['full','مع الأسقف']].forEach(([k,t])=>{
 const b=document.createElement('button');b.className='btn';b.dataset.m=k;b.textContent=t;b.onclick=()=>{setMode(k);};modesEl.appendChild(b);});
-const toggles={labels:{on:true},route:{on:true},outer:{on:true},safety:{on:true}};
+const toggles={labels:{on:true},route:{on:true},outer:{on:true},safety:{on:true},flow:{on:true},em:{on:true}};
 const togEl=document.getElementById('toggles');
+document.getElementById('emBtn').onclick=()=>{toggles.em.on=!toggles.em.on;setMode(mode);};
 {const vg=document.createElement('div');vg.id='vig';stage.appendChild(vg);
 const setPhoto=on=>{sun.color.set(on?0xffddb0:0xffe9c4);sun.intensity=on?.95:.8;if(on)sun.position.set(-95,72,85);else sun.position.set(-70,110,60);
 hemi.intensity=on?.34:.38;cv.style.filter=on?'contrast(1.06) saturate(.94)':'';vg.style.opacity=on?1:0;};
 const b=document.createElement('button');b.className='btn';b.textContent='📷 تصوير واقعي';let on=false;
 b.onclick=()=>{on=!on;b.classList.toggle('on',on);setPhoto(on);};togEl.appendChild(b);on=true;b.classList.add('on');setPhoto(true);}
-[['labels','الأسماء'],['route','مسار الجولة'],['outer','أسماء الخارج'],['safety','الإخلاء والسلامة']].forEach(([k,t])=>{
+[['labels','الأسماء'],['route','مسار الجولة'],['outer','أسماء الخارج'],['safety','الطفايات والإنذار'],['flow','دخول وخروج الطلاب'],['em','مخارج الطوارئ']].forEach(([k,t])=>{
 const b=document.createElement('button');b.className='btn on';b.textContent=t;
 b.onclick=()=>{toggles[k].on=!toggles[k].on;b.classList.toggle('on',toggles[k].on);if(k==='outer')G.labOut.visible=toggles[k].on;setMode(mode);};togEl.appendChild(b);});
 [['top','منظر علوي'],['aerial','منظر جوي']].forEach(([k,t])=>{
@@ -852,6 +967,13 @@ const listEl=document.getElementById('list');
 stops.forEach((s,i)=>{if(s.sec)listEl.insertAdjacentHTML('beforeend','<div class="sec">'+s.sec+'</div>');const b=document.createElement('button');b.className='stop';
 b.innerHTML=`<span>${s.name}${s.verify?'<span class="tag">للتأكيد</span>':''}${s.sub?`<small>${s.sub}</small>`:''}</span>`;
 b.onclick=()=>{stopTour();go(i);};listEl.appendChild(b);s.btn=b;});
+{const qs=window.__quickViews||[];if(qs.length){listEl.insertAdjacentHTML('afterbegin','<div class="sec">حركة الطلاب ومخارج الطوارئ</div>');
+const first=listEl.children[0];let ref=first;
+qs.forEach(([name,sub,m,view,t])=>{const b=document.createElement('button');b.className='stop';b.innerHTML=`<span>${name}<small>${sub}</small></span>`;
+b.onclick=()=>{stopTour();if(t.flow){toggles.flow.on=true;toggles.em.on=false;}if(t.em){toggles.em.on=true;toggles.flow.on=false;}
+document.querySelectorAll('#toggles .btn').forEach(x=>{if(x.textContent==='دخول وخروج الطلاب')x.classList.toggle('on',toggles.flow.on);if(x.textContent==='مخارج الطوارئ')x.classList.toggle('on',toggles.em.on);});
+setMode(m);curIdx=-1;markCur();fly(view,name,sub);};
+ref.insertAdjacentElement('afterend',b);ref=b;});}}
 let fl=null;
 function fly(t,title,sub,dur=1800){
 fl={t0:performance.now(),dur,p0:camera.position.clone(),l0:controls.target.clone(),p1:new THREE.Vector3(...t.cam),l1:new THREE.Vector3(...t.look)};
@@ -879,7 +1001,7 @@ const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 function loop(){
 if(fl){const k=Math.min(1,(performance.now()-fl.t0)/fl.dur),e=ease(k);
 camera.position.lerpVectors(fl.p0,fl.p1,e);controls.target.lerpVectors(fl.l0,fl.l1,e);if(k>=1)fl=null;}
-controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);
+if(window.__animWalkers)window.__animWalkers();controls.update();renderer.render(scene,camera);requestAnimationFrame(loop);
 }
 loop();
 document.getElementById('loading').style.display='none';
